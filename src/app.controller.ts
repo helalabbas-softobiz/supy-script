@@ -4,9 +4,10 @@ import * as fs from 'fs';
 
 import axios from 'axios';
 
-interface StoreTypeId {
+interface Payload {
   readonly storeId: string;
   readonly kitchenId: string;
+  readonly hostUrl: string;
 }
 
 interface idType {
@@ -26,7 +27,7 @@ export class AppController {
   }
 
   @Post(':id/placed')
-  async placedOrder(@Body() payload: StoreTypeId, @Param() id: idType) {
+  async placedOrder(@Body() payload: Payload, @Param() id: idType) {
     const grubTechOrder1 = JSON.parse(
       fs.readFileSync('grubtech1.json', 'utf-8'),
     );
@@ -36,6 +37,8 @@ export class AppController {
     const grubTechOrder3 = JSON.parse(
       fs.readFileSync('grubtech3.json', 'utf-8'),
     );
+
+    const { hostUrl } = payload;
 
     const totalOrders = [
       ...grubTechOrder1,
@@ -53,15 +56,11 @@ export class AppController {
 
     let count = 1;
     for (const order of totalOrders) {
-      await axios.post(
-        'https://api.retailer.supy.io/api/integration-inventory/webhooks/grubtech/orders',
-        order,
-        {
-          headers: {
-            'X-Api-Key': id.id,
-          },
+      await axios.post(hostUrl, order, {
+        headers: {
+          'X-Api-Key': id.id,
         },
-      );
+      });
 
       count++;
       const time = count % 5 === 0 ? 5000 : 2000;
@@ -73,7 +72,7 @@ export class AppController {
   }
 
   @Post(':id/complete')
-  async completeOrder(@Body() payload: StoreTypeId, @Param() id: idType) {
+  async completeOrder(@Body() payload: Payload, @Param() id: idType) {
     const grubTechOrder1 = JSON.parse(
       fs.readFileSync('grubtech1.json', 'utf-8'),
     );
@@ -83,6 +82,8 @@ export class AppController {
     const grubTechOrder3 = JSON.parse(
       fs.readFileSync('grubtech3.json', 'utf-8'),
     );
+
+    const { hostUrl } = payload;
 
     const totalOrders = [
       ...grubTechOrder1,
@@ -102,8 +103,8 @@ export class AppController {
       if (order['status'] === 'Completed' || order['status'] === 'Cancelled') {
         const endpoint =
           order['status'] === 'Completed'
-            ? `https://api.retailer.supy.io/api/integration-inventory/webhooks/grubtech/orders/${order.id}/completed`
-            : `https://api.retailer.supy.io/api/integration-inventory/webhooks/grubtech/orders/${order.id}/cancelled`;
+            ? `${hostUrl}/${order.id}/completed`
+            : `${hostUrl}/${order.id}/cancelled`;
 
         await axios.post(endpoint, null, {
           headers: {
