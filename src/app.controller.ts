@@ -97,6 +97,7 @@ export class AppController {
       }));
 
     console.log(totalOrders.length);
+    console.log({ hostUrl });
 
     let count = 1;
     for (const order of totalOrders) {
@@ -113,7 +114,8 @@ export class AppController {
         });
       }
       count++;
-      const time = count % 5 === 0 ? 10000 : 3000;
+      const time = count % 5 === 0 ? 5000 : 2000;
+      console.log(count);
       await this.delay(time);
     }
 
