@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import axios from 'axios';
 export const getEnvArg = (argName: string) => {
   const argIndex = process.argv.indexOf(`--${argName}`);
 
@@ -7,7 +8,11 @@ export const getEnvArg = (argName: string) => {
   return argValue;
 };
 
-function placedOrder(kitchenId: string, storeId: string, hostUrl: string) {
+async function placedOrder(
+  kitchenId: string,
+  storeId: string,
+  hostUrl: string,
+) {
   const grubTechOrder1 = JSON.parse(fs.readFileSync('grubtech1.json', 'utf-8'));
   const grubTechOrder2 = JSON.parse(fs.readFileSync('grubtech2.json', 'utf-8'));
   const grubTechOrder3 = JSON.parse(fs.readFileSync('grubtech3.json', 'utf-8'));
@@ -22,7 +27,11 @@ function placedOrder(kitchenId: string, storeId: string, hostUrl: string) {
   console.log(totalOrders.length);
   console.log(hostUrl);
 
-  console.log('Completed placed order Request');
+  const response = await axios.get(
+    'https://jsonplaceholder.typicode.com/todos/1',
+  );
+
+  console.log('Completed placed order Request', response.data);
 }
 
 const kitchenId = getEnvArg('kitchenId');
