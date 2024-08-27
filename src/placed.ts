@@ -1,12 +1,6 @@
 import * as fs from 'fs';
 import axios from 'axios';
-export const getEnvArg = (argName: string) => {
-  const argIndex = process.argv.indexOf(`--${argName}`);
-
-  const argValue = process.argv[argIndex + 1];
-
-  return argValue;
-};
+import { getEnvArg } from './read.env';
 
 async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -18,11 +12,9 @@ async function placedOrder(
   hostUrl: string,
   key: string,
 ) {
-  const grubTechOrder1 = JSON.parse(fs.readFileSync('grubtech1.json', 'utf-8'));
-  const grubTechOrder2 = JSON.parse(fs.readFileSync('grubtech2.json', 'utf-8'));
-  const grubTechOrder3 = JSON.parse(fs.readFileSync('grubtech3.json', 'utf-8'));
+  const grubTechOrder1 = JSON.parse(fs.readFileSync('grubtech.json', 'utf-8'));
 
-  const totalOrders = [...grubTechOrder1, ...grubTechOrder2, ...grubTechOrder3]
+  const totalOrders = [...grubTechOrder1]
     .filter((element) => element.kitchen.id === kitchenId)
     .map((order) => ({
       ...order,
@@ -34,11 +26,11 @@ async function placedOrder(
 
   let count = 1;
   for (const order of totalOrders) {
-    await axios.post(hostUrl, order, {
-      headers: {
-        'X-Api-Key': key,
-      },
-    });
+    // await axios.post(hostUrl, order, {
+    //   headers: {
+    //     'X-Api-Key': key,
+    //   },
+    // });
 
     count++;
     const time = count % 5 === 0 ? 5000 : 2000;

@@ -18,11 +18,9 @@ async function completeOrder(
   hostUrl: string,
   key: string,
 ) {
-  const grubTechOrder1 = JSON.parse(fs.readFileSync('grubtech1.json', 'utf-8'));
-  const grubTechOrder2 = JSON.parse(fs.readFileSync('grubtech2.json', 'utf-8'));
-  const grubTechOrder3 = JSON.parse(fs.readFileSync('grubtech3.json', 'utf-8'));
+  const grubTechOrder1 = JSON.parse(fs.readFileSync('grubtech.json', 'utf-8'));
 
-  const totalOrders = [...grubTechOrder1, ...grubTechOrder2, ...grubTechOrder3]
+  const totalOrders = [...grubTechOrder1]
     .filter((element) => element.kitchen.id === kitchenId)
     .map((order) => ({
       ...order,
