@@ -48,7 +48,7 @@ async function completeOrder(
     }
     count++;
     const time = count % 5 === 0 ? 5000 : 2000;
-    console.log(count, '');
+    console.log(count);
     await delay(time);
   }
 
