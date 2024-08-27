@@ -26,11 +26,11 @@ async function placedOrder(
 
   let count = 1;
   for (const order of totalOrders) {
-    // await axios.post(hostUrl, order, {
-    //   headers: {
-    //     'X-Api-Key': key,
-    //   },
-    // });
+    await axios.post(hostUrl, order, {
+      headers: {
+        'X-Api-Key': key,
+      },
+    });
 
     count++;
     const time = count % 5 === 0 ? 5000 : 2000;
